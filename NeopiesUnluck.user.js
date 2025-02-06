@@ -7,16 +7,19 @@
 // @grant        none
 // ==/UserScript==
 
-let wa = document.getElementById("winners-announced").children[1];
 let avatar = false;
 let avatarOdds = 1;
+
+//Find all winner %s, calculate odds of winning none, and check if user won any of the votes
+let wa = document.getElementById("winners-announced").children[1];
 for (let i = 0; i < wa.children.length; i++){
     let yv = wa.children[i].getElementsByClassName("yourVote").length;
     if (!yv)avatar = true;
     let loseOdds = 1-wa.children[i].getElementsByClassName("winningVote")[0].parentElement.parentElement.children[2].innerText.trim().replace("%","")/100;
     avatarOdds = avatarOdds * loseOdds;
 }
-let text = document.getElementsByClassName("flavor-text")[0].children[0];
+
+//Ugly math and string manipulation to display number nicely
 avatarOdds = 1/avatarOdds;
 if (avatarOdds < 10){
 avatarOdds = Math.round((avatarOdds) * 100) / 100;
@@ -32,6 +35,9 @@ while ((avatarOdds.length>3)&&(!avatarOdds.includes("."))){
     avatarOdds = avatarOdds.substring(0,avatarOdds.length-3);
 }
 unluckyNumber = avatarOdds + unluckyNumber;
+
+//Update page text
+let text = document.getElementsByClassName("flavor-text")[0].children[0];
 if (avatar==true){
     text.innerHTML += "<br><br><b>You've won the avatar already! Lucky you! But 1 in "+unluckyNumber+" people haven't been as lucky so far!</b>";
 } else {
